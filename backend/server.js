@@ -1,10 +1,14 @@
-import express from 'express';
+import express from "express";
 
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
-import { connectDB } from './config/db.js';
-import todoRoutes from './routes/todo.route.js'
-const PORT = process.env.PORT || 5000 
+import cors from "cors";
+
+import path from "path";
+
+import { connectDB } from "./config/db.js";
+import todoRoutes from "./routes/todo.route.js";
+const PORT = process.env.PORT || 5000;
 
 dotenv.config()
 
