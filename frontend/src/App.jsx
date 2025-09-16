@@ -13,6 +13,7 @@ function App() {
   const [todos, setTodos] = useState([])
   const [editingTodo, setEditingTodo] = useState(null)
   const [editedText, setEditedText] = useState('')
+  const [notification, setNotification] = useState(null)
 
   const AddTodo = async (e) =>{
     e.preventDefault();
@@ -56,14 +57,19 @@ function App() {
     }
   }
 
-  const deleteTodo = async (id) =>{
+  const deleteTodo = async (id) => {
     try { 
-      await axios.delete(`/api/todos/${id}` )
-      setTodos(todos.filter((todo) =>todo._id !== id ))
+      await axios.delete(`/api/todos/${id}`);
+      setTodos(todos.filter((todo) => todo._id !== id));
+
+      setNotification("Task removed successfully");
+      setTimeout(() => setNotification(null), 3000);
+  
     } catch (error) {
-      console.log("Error deleting todo", error)
+      console.log("Error deleting todo", error);
     }
   }
+  
 
   const toggleTodo = async (id) =>{
     try {
@@ -79,7 +85,13 @@ function App() {
   }
 
   return (
+
    <div className="min-h-screen bg-gradient-to-br from gray-50 to-gray-100 flex items-center justify-center p-4 ">
+    {notification && (
+      <div className="fixed top-4 right-4 bg-orange-500 text-white px-4 py-2 rounded shadow-lg">
+      {notification}
+      </div>
+     )}
     <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-8">
          <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">Task Manager</h1>
       <form
@@ -142,8 +154,10 @@ function App() {
                           {todo.completed &&  <MdOutlineDone/> }
                         </button>
                         <span
-                          className="text-gray-800 font-medium truncate"
-                        >{todo.text}</span>
+                          className={`text-gray-800 font-medium truncate 
+                            ${todo.completed ? "line-through text-gray-400" : ""}`}
+                        >
+                        {todo.text}</span>
                       </div>
                       <div className="flex gap-x-2">
                         <button
